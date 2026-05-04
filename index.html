@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity Motors | Elite Performance Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            400: '#f87171',
+                            500: '#ef4444', 
+                            600: '#dc2626',
+                            glow: 'rgba(239, 68, 68, 0.4)',
+                        },
+                        dark: {
+                            800: '#111827',
+                            900: '#0b0f1a',
+                            950: '#05070a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        .page-transition { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .glass {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-heavy {
+            background: rgba(7, 10, 18, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-modal { animation: modalFade 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-dark-950 text-gray-100 min-h-screen selection:bg-brand-500 selection:text-white overflow-x-hidden">
+
+    <!-- ================= AUTHENTICATION VIEW ================= -->
+    <div id="auth-view" class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-600/20 blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full"></div>
+        
+        <div class="relative w-full max-w-lg glass rounded-3xl shadow-2xl p-10" style="animation: slideIn 0.5s ease-out forwards;">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-brand-500/20 text-brand-500 mb-6 border border-brand-500/30">
+                    <i class="fa-solid fa-bolt-lightning text-4xl"></i>
+                </div>
+                <h1 class="text-4xl font-extrabold text-white tracking-tighter mb-3">VELOCITY <span class="text-brand-500">MOTORS</span></h1>
+                <p class="text-gray-400 font-medium text-sm">Elite Performance Automotive Gallery</p>
+            </div>
+
+            <!-- TABS -->
+            <div class="flex gap-4 mb-8 p-1 bg-dark-800/50 rounded-xl border border-gray-800">
+                <button onclick="toggleAuthMode('login')" id="login-tab" class="flex-1 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white">Login</button>
+                <button onclick="toggleAuthMode('signup')" id="signup-tab" class="flex-1 py-2 rounded-lg text-sm font-bold transition-all bg-brand-600 text-white">Sign Up</button>
+            </div>
+
+            <form id="auth-form" class="space-y-6">
+                <div id="auth-error" class="hidden bg-red-500/10 border border-red-500/50 text-red-500 text-xs font-bold rounded-xl p-4 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="error-text"></span>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Email</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="email" id="email" required class="w-full pl-12 pr-4 py-4 bg-dark-800/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all text-white outline-none" placeholder="member@velocity.com">
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center px-1">
+                        <label class="text-xs font-bold uppercase tracking-widest text-gray-500">Password</label>
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-shield-halved absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        <input type="password" id="password" required class="w-full pl-12 pr-4 py-4 bg-dark-800/50 border border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all text-white outline-none" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 shadow-lg shadow-brand-600/30 text-white font-bold py-4 px-4 rounded-xl transition-all flex items-center justify-center gap-3 group active:scale-95">
+                    <span id="auth-btn-text">Create Account</span>
+                    <i class="fa-solid fa-chevron-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </form>
+            
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center">
+                <p id="auth-hint" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
+                    Set your password in "Sign Up" <br> to use it for "Login".
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MAIN APP VIEW ================= -->
+    <div id="app-view" class="hidden min-h-screen flex flex-col page-transition">
+        <nav class="glass border-b border-gray-800 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-brand-600 flex items-center justify-center text-white"><i class="fa-solid fa-bolt-lightning"></i></div>
+                    <span class="text-2xl font-black text-white tracking-tighter">VELOCITY</span>
+                </div>
+                <button onclick="handleLogout()" class="text-gray-400 hover:text-red-500 font-bold text-xs flex items-center gap-2 uppercase tracking-widest transition-colors">
+                    Log out <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </nav>
+
+        <header class="py-16 px-6 md:px-12 bg-gradient-to-b from-brand-600/10 to-transparent">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-6xl font-black text-white tracking-tighter mb-4">Elite Inventory</h2>
+                <p class="text-xl text-gray-400 font-medium max-w-2xl leading-relaxed">
+                    A text-driven catalog of the world's most sought-after machinery. Pure specifications. Pure performance.
+                </p>
+            </div>
+        </header>
+
+        <main class="flex-grow p-6 md:p-12 pt-0">
+            <div class="max-w-7xl mx-auto">
+                <div id="car-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-12 border-t border-gray-800 text-center">
+             <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.4em]">Velocity Motors &copy; 2026. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- ================= MODAL VIEW ================= -->
+    <div id="modal-container" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
+        <div onclick="closeModal()" class="absolute inset-0 bg-dark-950/80 backdrop-blur-md"></div>
+        <div id="car-modal" class="glass-heavy w-full max-w-5xl max-h-[90vh] rounded-[3rem] overflow-hidden relative flex flex-col md:flex-row animate-modal">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-brand-600 text-white transition-all flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="w-full md:w-1/2 h-64 md:h-auto bg-dark-950 flex flex-col items-center justify-center p-12 relative overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                     <span id="modal-bg-text" class="text-9xl font-black text-outline uppercase whitespace-nowrap rotate-90"></span>
+                </div>
+                <div class="relative z-10 text-center">
+                    <i class="fa-solid fa-car-side text-8xl text-brand-600 mb-6"></i>
+                    <div id="modal-id-badge" class="text-sm font-black text-gray-500 uppercase tracking-widest"></div>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto no-scrollbar">
+                <div id="modal-category" class="text-xs font-black text-brand-500 uppercase tracking-[0.3em] mb-4"></div>
+                <h2 id="modal-title" class="text-5xl font-black text-white tracking-tighter mb-2"></h2>
+                <div id="modal-year" class="inline-block px-3 py-1 bg-white/10 text-white text-[10px] font-black rounded-lg uppercase tracking-widest mb-8"></div>
+                
+                <p id="modal-desc" class="text-gray-400 text-lg leading-relaxed mb-10"></p>
+                
+                <div class="grid grid-cols-3 gap-4 mb-10">
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Top Speed</div>
+                        <div id="spec-speed" class="text-white font-black text-lg"></div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">0-60 MPH</div>
+                        <div id="spec-accel" class="text-white font-black text-lg"></div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Power</div>
+                        <div id="spec-power" class="text-white font-black text-lg"></div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between pt-8 border-t border-white/10">
+                    <div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase mb-1">Price Guide</div>
+                        <div id="modal-price" class="text-3xl font-black text-brand-500 tracking-tighter"></div>
+                    </div>
+                    <button class="bg-white text-black font-black px-8 py-4 rounded-2xl hover:bg-brand-600 hover:text-white transition-all transform active:scale-95">
+                        Inquire Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notification-area" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[120] flex flex-col gap-3"></div>
+
+    <script>
+        const cars = [
+            { id: 1, make: "Porsche", model: "911 GT3 RS", year: 2024, price: 241300, category: "Track Focused", desc: "The pinnacle of 911 performance. Every vent, every fin, and that massive swan-neck wing works together to create incredible downforce for track dominance.", specs: { speed: "184 mph", accel: "3.0s", power: "518 hp" } },
+            { id: 2, make: "McLaren", model: "Artura", year: 2024, price: 237500, category: "Supercar", desc: "A clean-sheet design that redefines McLaren DNA. This High-Performance Hybrid combines electrified torque with the brand's legendary lightweight engineering.", specs: { speed: "205 mph", accel: "3.0s", power: "671 hp" } },
+            { id: 3, make: "Lamborghini", model: "Revuelto", year: 2024, price: 608358, category: "Supercar", desc: "A V12 heart paired with three electric motors. The Revuelto is the first super-sports V12 plug-in hybrid, honoring Lamborghini's tradition while embracing the future.", specs: { speed: "217 mph", accel: "2.5s", power: "1001 hp" } },
+            { id: 4, make: "Ferrari", model: "SF90 Stradale", year: 2023, price: 524815, category: "Hybrid Hypercar", desc: "Breaking new ground as the most powerful road-going Ferrari ever. Its AWD system and hybrid powertrain deliver blistering acceleration and surgical precision.", specs: { speed: "211 mph", accel: "2.0s", power: "986 hp" } },
+            { id: 5, make: "Bugatti", model: "Chiron Pur Sport", year: 2022, price: 3600000, category: "Hypercar", desc: "Focused on lateral acceleration and handling. The Pur Sport trades top-speed records for raw agility, featuring shorter gear ratios and a massive fixed wing.", specs: { speed: "217 mph", accel: "2.3s", power: "1479 hp" } },
+            { id: 6, make: "Aston Martin", model: "Vantage F1", year: 2023, price: 171500, category: "Grand Tourer", desc: "Born on the track. This special edition celebrates Aston Martin's return to F1, offering significant chassis and aerodynamic improvements over the standard Vantage.", specs: { speed: "195 mph", accel: "3.5s", power: "527 hp" } },
+            { id: 7, make: "Audi", model: "R8 V10 Performance", year: 2023, price: 209700, category: "Daily Supercar", desc: "The final swan song of the naturally aspirated V10. It remains the perfect blend of supercar drama and daily-driver usability.", specs: { speed: "201 mph", accel: "3.2s", power: "602 hp" } },
+            { id: 8, make: "Lucid", model: "Air Sapphire", year: 2024, price: 249000, category: "Electric", desc: "Electric performance without compromise. The Sapphire luxury sedan manages to embarrass hypercars on the drag strip while seating five in absolute silence.", specs: { speed: "205 mph", accel: "1.89s", power: "1234 hp" } },
+            { id: 9, make: "Koenigsegg", model: "Jesko", year: 2024, price: 3000000, category: "Hypercar", desc: "A masterpiece of Swedish engineering. Featuring the revolutionary Light Speed Transmission and a twin-turbo V8 that thrives on E85 fuel.", specs: { speed: "300+ mph", accel: "2.5s", power: "1600 hp" } }
+        ];
+
+        let authMode = 'signup'; 
+        let userDatabase = {}; 
+
+        function toggleAuthMode(mode) {
+            authMode = mode;
+            const loginTab = document.getElementById('login-tab');
+            const signupTab = document.getElementById('signup-tab');
+            const btnText = document.getElementById('auth-btn-text');
+            const hint = document.getElementById('auth-hint');
+
+            if(mode === 'login') {
+                loginTab.className = "flex-1 py-2 rounded-lg text-sm font-bold transition-all bg-brand-600 text-white";
+                signupTab.className = "flex-1 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white";
+                btnText.innerText = "Access Showroom";
+                hint.innerText = "Enter the password you used during sign up.";
+            } else {
+                signupTab.className = "flex-1 py-2 rounded-lg text-sm font-bold transition-all bg-brand-600 text-white";
+                loginTab.className = "flex-1 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 hover:text-white";
+                btnText.innerText = "Create Account";
+                hint.innerText = "The password you set here will be required for login.";
+            }
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.toLowerCase();
+            const pass = document.getElementById('password').value;
+            if (authMode === 'signup') {
+                userDatabase[email] = pass;
+                completeAuth(`Account created for ${email}. Access granted.`);
+            } else {
+                if (userDatabase[email] && userDatabase[email] === pass) {
+                    completeAuth(`Welcome back, ${email}.`);
+                } else {
+                    showError("Invalid credentials.");
+                }
+            }
+        });
+
+        function showError(msg) {
+            const errorBox = document.getElementById('auth-error');
+            errorBox.classList.remove('hidden');
+            document.getElementById('error-text').innerText = msg;
+        }
+
+        function completeAuth(msg) {
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('app-view').classList.remove('hidden');
+            renderCars();
+            alertNotice(msg);
+        }
+
+        function handleLogout() {
+            document.getElementById('app-view').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+            closeModal();
+        }
+
+        function renderCars() {
+            const grid = document.getElementById('car-grid');
+            grid.innerHTML = cars.map((car, i) => `
+                <div onclick="openModal(${car.id})" class="glass rounded-[2.5rem] p-8 group hover:border-brand-500 transition-all duration-500 cursor-pointer shadow-2xl relative overflow-hidden" 
+                     style="animation: slideIn 0.6s ease-out forwards ${i * 0.1}s; opacity: 0;">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                         <span class="text-6xl font-black text-outline uppercase">${car.make[0]}</span>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="px-3 py-1 bg-white/10 text-white text-[9px] font-black rounded-lg uppercase tracking-widest">${car.year}</span>
+                            <div class="text-[10px] font-black text-brand-500 uppercase tracking-[0.2em]">${car.category}</div>
+                        </div>
+                        <h3 class="text-4xl font-black text-white tracking-tighter mb-8 leading-none">
+                            ${car.make} <br> 
+                            <span class="text-gray-500 group-hover:text-white transition-colors text-2xl">${car.model}</span>
+                        </h3>
+                        <div class="flex justify-between items-end pt-6 border-t border-gray-800">
+                            <div>
+                                <div class="text-[9px] text-gray-600 font-bold uppercase mb-1">MSRP From</div>
+                                <p class="text-2xl font-black text-white tracking-tight">$${car.price.toLocaleString()}</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-2xl bg-dark-800 group-hover:bg-brand-600 flex items-center justify-center text-white transition-all transform group-hover:rotate-12">
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(carId) {
+            const car = cars.find(c => c.id === carId);
+            if (!car) return;
+
+            document.getElementById('modal-bg-text').innerText = car.make;
+            document.getElementById('modal-id-badge').innerText = `Ref: VM-${car.id}00${car.year % 100}`;
+            document.getElementById('modal-title').innerText = `${car.make} ${car.model}`;
+            document.getElementById('modal-category').innerText = car.category;
+            document.getElementById('modal-year').innerText = car.year;
+            document.getElementById('modal-desc').innerText = car.desc;
+            document.getElementById('modal-price').innerText = `$${car.price.toLocaleString()}`;
+            
+            document.getElementById('spec-speed').innerText = car.specs.speed;
+            document.getElementById('spec-accel').innerText = car.specs.accel;
+            document.getElementById('spec-power').innerText = car.specs.power;
+
+            const container = document.getElementById('modal-container');
+            container.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function alertNotice(msg) {
+            const area = document.getElementById('notification-area');
+            const notice = document.createElement('div');
+            notice.className = "glass px-8 py-4 rounded-2xl text-sm font-bold text-white border-brand-500/50 shadow-[0_0_30px_rgba(239,68,68,0.2)] animate-float flex items-center gap-3";
+            notice.innerHTML = `<i class="fa-solid fa-circle-check text-brand-500"></i> ${msg}`;
+            area.appendChild(notice);
+            setTimeout(() => notice.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
